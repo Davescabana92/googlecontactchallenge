@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des contacts</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-100 p-4 shadow-md">
+        <div class="flex justify-start gap-16 items-center px-2 py-2">
+            <div class="flex items-center space-x-4">
+                <div>
+                    <img class="w-6 h-6 rounded-full hover:bg-gray-300" id="menu-humburger" src="images/solid-menu.svg" alt="menu humburger">
+                </div>
+                <div>
+                    <img class="w-8 h-8" src="images/contactimg.png" alt="icone contact">
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold">Contacts</h1>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <img id="searchButton" class="w-6 h-6" src="images/codicon--search.svg" alt="">
+                </div>
+                <input type="text" id="searchInput" class="px-10 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Rechercher">
+            </div>
+        </div>
+    </header>
+    <main class="flex">
+        <!-- Menu de navigation -->
+        <div class="bg-gray-100 shadow-md p-4 space-y-4 w-1/5 h-auto" id="menu">
+            <!-- Bouton "Créer un contact" -->
+            <div class="btn1">
+                <button class="bg-blue-200 hover:bg-blue-300 hover:shadow-lg text-gray-800 font-bold py-2 px-4 rounded-xl flex items-center space-x-2" id="createContact_btn">
+                    <img src="images/ic--sharp-add.svg" alt="" class="w-5 h-5">
+                    <span>Créer un contact</span>
+                </button>
+            </div>
+            <!-- Bouton "Contact" -->
+            <div class="w-full">
+                <button class="bg-blue-200 hover:bg-blue-300 hover:shadow-lg text-gray-800 font-medium py-2 px-4 rounded-2xl flex justify-between items-center space-x-2 w-4/5" id="show-list">
+                    <div class="flex items-center space-x-2">
+                        <img src="images/material-symbols--person-outline.svg" alt="" class="w-5 h-5">
+                        <span>Contact</span>
+                    </div>
+                    <p id="contact_count"></p>
+                </button>
+            </div>
+            <!-- Bouton "Fréquents" -->
+            <div class="btn1">
+                <button class="bg-gray-100 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded flex items-center space-x-2" id="frequents_contact_btn">
+                    <img src="images/Vector.svg" alt="" class="w-5 h-5">
+                    <span>Fréquents</span>
+                </button>
+            </div>
+            <!-- Bouton "Libelle" -->
+            <div>
+                <div class="flex items-center justify-between">
+                    <h4 class="text-gray-800 font-bold text-base">Libelles</h4>
+                    <button class="bg-gray-100 hover:bg-gray-300 hover:shadow-lg text-gray-800 font-bold py-2 px-4 rounded-full w-12 h-12 flex justify-center items-center" id="addlabel_btn">
+                        <img src="images/ic--sharp-add.svg" alt="add label" class="w-5 h-5">
+                    </button>
+                </div>
+                <div id="label-container" class="mt-2 flex flex-col gap-2"></div>
+            </div>
+        </div>
+    
+        <!-- Liste des contacts -->
+        <div class="flex-1 p-4 w-4/5 bg-white" id="list_container">
+            <h1 class="text-2xl font-bold mb-4" id="tableTitle">Contacts</h1>
+            <div class="bg-white shadow-md rounded-md p-4">
+                <table class="w-full" id="myContactList">
+                    <thead>
+                        <tr class="border-b border-gray-200">
+                            <th class="py-2 text-left">Titre</th>
+                            <th class="py-2 text-left">E-mail</th>
+                            <th class="py-2 text-left">Numero de téléphone</th>
+                            <th class="py-2 text-left">Fonction et entreprise</th>
+                            <th class="py-2 text-left">Libellés</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contact-list"></tbody>
+                </table>
+            </div>
+        </div>
+    
+        <!-- Overlay et Boîte de dialogue -->
+        <div id="overlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-10 hidden"></div>
+        <div id="dialog" class="bg-white flex justify-center items-center flex-col gap-2 fixed top-1/2 left-1/2 shadow-lg rounded-md p-4 transform -translate-x-1/2 -translate-y-1/2 z-20 hidden">
+            <h2 class="text-xl font-bold mb-4">Détails du Contact</h2>
+            <p id="contact-info"></p>
+            <div class="flex justify-between space-x-2 mt-4">
+                <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" id="delete-button">Supprimer</button>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded" id="edit-button">Modifier</button>
+                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded" id="close-button">Fermer</button>
+            </div>
+        </div>
+        <!-- Overlay et Boîte de dialogue personnalisée -->
+        <div id="overlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-10 hidden"></div>
+        <div id="custom-dialog" class="bg-white shadow-lg rounded-xl p-4 z-20 hidden fixed top-1/2 left-1/2 w-1/5 h-1/4 p-5 bg-gray-100 shadow-lg rounded-[25px] transform -translate-x-1/2 -translate-y-1/2 z-50 ">
+            <h2 class="text-xl font-bold mb-4">Ajouter un Libellé</h2>
+            <input type="text" id="label-input" class="p-2 border border-blue-200 rounded w-full" placeholder="Saisir un libellé">
+            <div class="flex justify-end space-x-2 mt-4">
+                <button class="bg-white text-blue-500 border-none cursor-pointer" id="cancel-label">Ne rien faire</button>
+                <button class="bg-white text-blue-500 border-none cursor-pointer" id="save-label">Enregistrer</button>
+            </div>
+        </div>
+    </main>
+    <script>
+       const addLabelBtn = document.getElementById('addlabel_btn');
+const labelContainer = document.getElementById('label-container');
+const overlay = document.getElementById('overlay');
+const customDialog = document.getElementById('custom-dialog');
+const labelInput = document.getElementById('label-input');
+const saveLabelBtn = document.getElementById('save-label');
+const cancelLabelBtn = document.getElementById('cancel-label');
+const dialogDetailContact = document.getElementById("dialog");
+const contactInfo = document.getElementById('contact-info');
+let currentContactIndex;
+
+const showContactButton = document.getElementById('createContact_btn');
+const showListButton = document.getElementById('show-list');
+
+// Afficher le dialogue pour ajouter un label
+const showDialog = () => {
+    overlay.classList.remove('hidden');
+    customDialog.classList.remove('hidden');
+    labelInput.value = ''; // Réinitialiser l'entrée
+    labelInput.focus(); // Mettre le focus sur l'entrée
+};
+
+addLabelBtn.addEventListener('click', showDialog);
+
+// Tableau pour stocker les labels
+let labels = [];
+
+// Sauvegarder un nouveau label
+saveLabelBtn.addEventListener('click', () => {
+    const newLabel = labelInput.value.trim();
+    
+    // Vérifier si le label existe déjà
+    const existingLabels = Array.from(labelContainer.children).map(div => div.querySelector('span').textContent.trim());
+    
+    if (newLabel && !existingLabels.includes(newLabel)) {
+        const labelDiv = document.createElement('div');
+        labelDiv.classList.add('bg-gray-100', 'rounded-md', 'py-1', 'px-2', 'flex', 'items-center', 'space-x-2');
+        labelDiv.innerHTML = `
+            <img src="images/label.svg" alt="Label" class="w-5 h-5">
+            <span>${newLabel}</span>
+        `;
+        labelContainer.appendChild(labelDiv);
+
+        // Ajouter le label au tableau et au localStorage
+        labels.push(newLabel);
+        localStorage.setItem('labels', JSON.stringify(labels));
+
+        overlay.classList.add('hidden');
+        customDialog.classList.add('hidden');
+    } else if (existingLabels.includes(newLabel)) {
+        alert('Le label existe déjà.'); // Alerte si le label est déjà présent
+        overlay.classList.add('hidden');
+        customDialog.classList.add('hidden');
+    }
+});
+
+// Charger les labels depuis localStorage
+function loadLabels() {
+    const storedLabels = JSON.parse(localStorage.getItem('labels')) || [];
+    labels = storedLabels; // Mettre à jour la variable labels
+
+    storedLabels.forEach(label => {
+        const labelDiv = document.createElement('div');
+        labelDiv.classList.add('bg-gray-100', 'rounded-md', 'py-1', 'px-2', 'flex', 'items-center', 'space-x-2');
+        labelDiv.innerHTML = `
+            <img src="images/label.svg" alt="Label" class="w-5 h-5">
+            <span>${label}</span>
+        `;
+        labelContainer.appendChild(labelDiv);
+    });
+}
+
+// Appeler la fonction au chargement du document
+document.addEventListener("DOMContentLoaded", loadLabels);
+
+// Annuler l'ajout de label
+cancelLabelBtn.addEventListener('click', () => {
+    overlay.classList.add('hidden');
+    customDialog.classList.add('hidden');
+});
+
+// Navigation vers d'autres pages
+showContactButton.addEventListener('click', () => {
+    window.location.href = 'contact.html';
+});
+
+showListButton.addEventListener('click', () => {
+    window.location.href = 'index1.html';
+});
+
+// Affichage des contacts
+document.addEventListener('DOMContentLoaded', () => {
+    const contactList = document.getElementById('contact-list');
+    const contacts = JSON.parse(localStorage.getItem('contacts')) || []; // Récupérer les contacts ou un tableau vide
+
+    contacts.forEach((contact, index) => {
+        const contactRow = document.createElement('tr'); // Créer une nouvelle ligne pour le contact
+        contactRow.classList.add('border-b', 'border-gray-200');
+
+        contactRow.innerHTML = `
+            <td class="py-2 flex items-center">
+                <img src="${contact.image}" alt="Image de ${contact.prenom} ${contact.nom}" class="w-10 h-10 rounded-full mr-2">
+                ${contact.prenom} ${contact.nom}
+            </td>
+            <td class="py-2">${contact.emails.join(', ')}</td>
+            <td class="py-2">${contact.phone}</td>
+            <td class="py-2">${contact.fonction}, ${contact.entreprise}</td>
+            <td class="py-2">${contact.labels.join(', ')}</td>
+        `;
+
+        contactList.appendChild(contactRow); // Ajouter la ligne au tableau
+        contactRow.addEventListener('click', () => showContactDetails(index)); // Événement de clic sur la ligne
+    });
+});
+
+// Affichage du détail contact
+function showContactDetails(index) {
+    const contacts = JSON.parse(localStorage.getItem('contacts')) || []; // Récupérer les contacts ou un tableau vide
+    currentContactIndex = index; // Stocker l'index du contact actuel
+    const contact = contacts[index];
+    contactInfo.innerText = `
+        Prénom: ${contact.prenom}\n
+        Nom: ${contact.nom}\n
+        Fonction: ${contact.fonction}\n
+        Entreprise: ${contact.entreprise}\n
+        Téléphone: ${contact.phone}\n
+        Emails: ${contact.emails.join(', ')}\n
+        Libellés: ${contact.labels ? contact.labels.join(', ') : ''}
+    `;
+    dialogDetailContact.classList.remove("hidden");
+    overlay.classList.remove("hidden");
+}
+
+document.getElementById('close-button').addEventListener('click', function() {
+    dialogDetailContact.classList.add("hidden");
+    overlay.classList.add("hidden");
+});
+
+const contacts = JSON.parse(localStorage.getItem('contacts')) || []; // Récupérer les contacts ou un tableau vide
+
+document.getElementById('delete-button').addEventListener('click', function() {
+    contacts.splice(currentContactIndex, 1); // Supprimer le contact
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+    location.reload(); // Recharger la page pour mettre à jour la liste
+});
+
+document.getElementById('edit-button').addEventListener('click', function() {
+    const contact = contacts[currentContactIndex];
+    localStorage.setItem('editContact', JSON.stringify(contact)); // Stocker le contact à modifier
+    window.location.href = 'contact.html'; // Rediriger vers le formulaire
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    let isVisible = true; // État d'affichage
+
+    const menu = document.getElementById("menu");
+    const listContainer = document.getElementById("list_container");   
+
+    document.getElementById("menu-humburger").addEventListener("click", function() {
+        if (menu && listContainer) { // Vérifie que les éléments existent
+            if (isVisible) {
+                // Cacher le menu et agrandir le conteneur de formulaire
+                menu.classList.add('hidden'); // Cache le menu
+                listContainer.classList.remove('w-3/4'); // Réinitialise la largeur
+                listContainer.classList.add('w-12/12'); // Agrandit le conteneur de formulaire à 100%
+            } else {
+                menu.classList.remove('hidden'); // Affiche le menu
+                menu.classList.add('flex'); // Applique le style flex
+                menu.classList.add("flex-col");
+                listContainer.classList.remove('w-12/12'); // Réinitialise la largeur
+                listContainer.classList.add('w-3/4'); // Rétrécit le conteneur de formulaire à 75%
+            }
+            isVisible = !isVisible; // Inverse l'état
+        } else {
+            console.error("Le menu ou le conteneur de formulaire n'est pas trouvé.");
+        }
+    });
+});
+
+// Afficher le nombre total des contacts
+const tableTitle = document.getElementById("tableTitle");
+tableTitle.textContent = `Contacts(${contacts.length})`;
+
+// Afficher le nombre total des contacts
+const contactCount = document.getElementById("contact_count");
+contactCount.textContent = `${contacts.length}`;
+
+
+    </script>
+</body>
+</html>

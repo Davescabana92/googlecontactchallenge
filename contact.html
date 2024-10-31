@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des contacts</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <header class="bg-gray-100 p-4 shadow-md">
+        <div class="flex justify-start gap-16 items-center px-2 py-2">
+            <div class="flex items-center space-x-4">
+                <div>
+                    <img class="w-6 h-6 rounded-full hover:bg-gray-300" id="menu-humburger" src="images/solid-menu.svg" alt="menu humburger">
+                </div>
+                <div>
+                    <img class="w-8 h-8" src="images/contactimg.png" alt="icone contact">
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold">Contacts</h1>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <img id="searchButton" class="w-6 h-6" src="images/codicon--search.svg" alt="">
+                </div>
+                <input type="text" id="searchInput" class="px-10 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Rechercher">
+            </div>
+        </div>
+    </header>
+    <main class="flex">
+        <!-- Menu de navigation -->
+        <div class="bg-gray-100 shadow-md p-4 space-y-4 w-1/5 h-auto" id="menu">
+            <!-- Bouton "Créer un contact" -->
+            <div class="btn1">
+                <button class="bg-blue-200 hover:bg-blue-300 hover:shadow-lg text-gray-800 font-bold py-2 px-4 rounded-xl flex items-center space-x-2" id="createContact_btn">
+                    <img src="images/ic--sharp-add.svg" alt="" class="w-5 h-5">
+                    <span>Créer un contact</span>
+                </button>
+            </div>
+            <!-- Bouton "Contact" -->
+            <div class="w-full">
+                <button class="bg-blue-200 hover:bg-blue-300 hover:shadow-lg text-gray-800 font-medium py-2 px-4 rounded-2xl flex items-center space-x-2 w-4/5" id="show-list">
+                    <img src="images/material-symbols--person-outline.svg" alt="" class="w-5 h-5">
+                    <span>Contact</span>
+                </button>
+            </div>
+            <!-- Bouton "Fréquents" -->
+            <div class="btn1">
+                <button class="bg-gray-100 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded flex items-center space-x-2" id="frequents_contact_btn">
+                    <img src="images/Vector.svg" alt="" class="w-5 h-5">
+                    <span>Fréquents</span>
+                </button>
+            </div>
+            <!-- Bouton "Libelle" -->
+            <div>
+                <div class="flex items-center justify-between">
+                    <h4 class="text-gray-800 font-bold text-base">Libelles</h4>
+                    <button class="bg-gray-100 hover:bg-gray-300 hover:shadow-lg text-gray-800 font-bold py-2 px-4 rounded-full w-12 h-12 flex justify-center items-center" id="addlabel_btn">
+                        <img src="images/ic--sharp-add.svg" alt="add label" class="w-5 h-5">
+                    </button>
+                </div>
+                <div id="label-container" class="mt-2 flex flex-col gap-2"></div>
+            </div>
+        </div>
+
+        <!-- Overlay et Boîte de dialogue personnalisée -->
+        <div id="overlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-10 hidden"></div>
+        <div id="custom-dialog" class="bg-white shadow-lg rounded-xl p-4 z-20 hidden fixed top-1/2 left-1/2 w-1/5 h-1/4 p-5 bg-gray-100 shadow-lg rounded-[25px] transform -translate-x-1/2 -translate-y-1/2 z-50 ">
+            <h2 class="text-xl font-bold mb-4">Ajouter un Libellé</h2>
+            <input type="text" id="label-input" class="p-2 border border-blue-200 rounded w-full" placeholder="Saisir un libellé">
+            <div class="flex justify-end space-x-2 mt-4">
+                <button class="bg-white text-blue-500 border-none cursor-pointer" id="cancel-label">Ne rien faire</button>
+                <button class="bg-white text-blue-500 border-none cursor-pointer" id="save-label">Enregistrer</button>
+            </div>
+        </div>
+    
+        <!-- Liste des contacts -->
+        <div class="flex justify-start rounded-2xl p-4 w-4/5 bg-white" id="formContainer">
+            <form class="bg-white flex flex-col gap-8 w-2/4 h-auto p-8" id="contact-form">
+                <div class="flex justify-start items-center gap-80">
+                    <div>
+                        <button><img src="images/arrow.png" alt="arrow"></button>
+                    </div>
+                    <div>
+                        <!-- Bouton d'enregistrement -->
+                      <button class="bg-gray-200 rounded-2xl border border-gray-200 text-gray-500 pl-4 pr-4 pt-2 pb-2 hover:bg-blue-500 hover:border-blue-500 hover:text-white" type="submit" id="submit-button">Enregistrer</button>
+                    </div>
+                </div>
+                <div class="flex justify-start flex-col items-center">
+                    <div class="w-full" >
+                        <button class="p-2 m-1 w-[calc(100%-22px)] bg-blue-500 text-white border-4 border-white rounded-full w-16 h-16 relative left-40 top-40 text-18 cursor-pointer flex items-center justify-center" type="button" id="upload-photo">
+                            <img src="images/ic--sharp-add.svg" alt="Ajouter une image">
+                        </button>
+                        <input class="p-2 m-1 w-[calc(100%-22px)]" type="file" id="photo" accept="image/*" style="display: none;">
+                        <div class="mt-2 w-48 h-48 border-2 border-gray-300 flex items-center justify-center rounded-full overflow-hidden" id="image-container">
+                            <img class="w-full h-full rounded-full object-cover" id="photo-preview" src="images/images.png" alt="photo profil" style="display: block;">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    
+                     <!-- Contenu de la boîte de dialogue personnalisée -->
+                   
+                    <button class="bg-white border border-gray-800 p-2 rounded-xl" type="button" id="add-label">+ Libellé</button>
+                </div>
+                <div class="flex justify-start flex-col gap-4">
+
+                    <div class="input-group">
+                        <div class="flex justify-start gap-4">
+                            <img src="images/material-symbols--person-outline.svg" alt="">
+                            <input class="p-2 border border-gray-300 rounded w-4/5" type="text" id="prenom" placeholder="Prénom" required>
+                        </div>
+                    </div>
+                    <div class="w-full">
+                        <div class="flex justify-start pl-8 w-full">
+                            <input class="p-2 border border-gray-300 rounded w-10/12" type="text" class="input_name" id="nom" placeholder="Nom" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="flex justify-start gap-4">
+                            <img src="images/gg--organisation.svg" alt="">
+                            <input class="p-2 border border-gray-300 rounded w-4/5" type="text" id="entreprise" placeholder="Entreprise">
+                        </div>   
+                    </div>
+                    <div class="w-full">
+                        <div class="flex justify-start pl-8 w-full">
+                         <input class="p-2 border border-gray-300 rounded w-10/12" type="text" class="input_fonction" id="fonction" placeholder="Fonction">   
+                        </div>  
+                    </div>
+                    <div class="flex flex-col gap-4" id="email-container">
+                        <div class="flex justify-start gap-4">
+                            <img src="images/ic--outline-email.svg" alt="Email Icon">
+                            <input class="p-2 border border-gray-300 rounded w-4/5" type="email" placeholder="Email principal">
+                        </div>
+                        <div class="flex justify-start pl-8 w-full">
+                            <button class="p-2 bg-gray-200 border border-gray-200 text-blue-500 font-medium rounded-2xl w-10/12" type="button" id="add-email">Ajouter une adresse email</button>
+                        </div>
+                    </div>
+                    <div class="input-group-phone">
+                        <div class="flex justify-start items-center gap-4">
+                            <div>
+                                <select id="country-code">
+                                <option value="+243">+243</option>
+                                </select>
+                            </div>
+                            <div>
+                                <img src="images/el--phone.svg" alt="">
+                            </div>
+                            <div class="w-full">
+                                <input class="p-2 border border-gray-300 rounded w-4/5" type="tel" id="phone" placeholder="Téléphone" required>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                </div>
+                
+            </form>
+        </div>
+
+    </main>
+    <script src="script.js"></script>
+    
+</body>
+</html>
