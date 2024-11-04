@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-100">
     <header class="bg-gray-100 p-4 shadow-md">
-        <div class="flex justify-start gap-16 items-center px-2 py-2">
+        <div class="flex justify-start gap-4 items-center px-2 py-2 md:gap-8 lg:gap-16">
             <div class="flex items-center space-x-4">
                 <div>
                     <img class="w-6 h-6 rounded-full hover:bg-gray-300" id="menu-humburger" src="images/solid-menu.svg" alt="menu humburger">
@@ -21,16 +21,16 @@
                 </div>
             </div>
             <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <button class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-event" id="searchButton">
                     <img id="searchButton" class="w-6 h-6" src="images/codicon--search.svg" alt="">
-                </div>
-                <input type="text" id="searchInput" class="px-10 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Rechercher">
+                </button>
+                <input type="text" id="searchInput" class="px-10 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-12 md:block md:w-full lg:block lg:w-full " placeholder="Rechercher">
             </div>
         </div>
     </header>
-    <main class="flex">
+    <main class="flex flex-col md:flex-col lg:flex-row">
         <!-- Menu de navigation -->
-        <div class="bg-gray-100 shadow-md p-4 space-y-4 w-1/5 h-auto" id="menu">
+        <div class="bg-gray-100 shadow-md p-4 space-y-4 w-full h-auto md:w-full lg:w-2/5" id="menu">
             <!-- Bouton "Créer un contact" -->
             <div class="btn1">
                 <button class="bg-blue-200 hover:bg-blue-300 hover:shadow-lg text-gray-800 font-bold py-2 px-4 rounded-xl flex items-center space-x-2" id="createContact_btn">
@@ -66,7 +66,7 @@
 
         <!-- Overlay et Boîte de dialogue personnalisée -->
         <div id="overlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-10 hidden"></div>
-        <div id="custom-dialog" class="bg-white shadow-lg rounded-xl p-4 z-20 hidden fixed top-1/2 left-1/2 w-1/5 h-1/4 p-5 bg-gray-100 shadow-lg rounded-[25px] transform -translate-x-1/2 -translate-y-1/2 z-50 ">
+        <div id="custom-dialog" class="bg-white shadow-lg rounded-xl p-4 z-20 hidden fixed top-1/2 left-1/2 w-4/5 h-auto md:w-2/5 md:h-auto lg:w-1/5 lg:h-auto p-5 bg-gray-100 shadow-lg rounded-[25px] transform -translate-x-1/2 -translate-y-1/2 z-50 ">
             <h2 class="text-xl font-bold mb-4">Ajouter un Libellé</h2>
             <input type="text" id="label-input" class="p-2 border border-blue-200 rounded w-full" placeholder="Saisir un libellé">
             <div class="flex justify-end space-x-2 mt-4">
@@ -76,9 +76,9 @@
         </div>
     
         <!-- Liste des contacts -->
-        <div class="flex justify-start rounded-2xl p-4 w-4/5 bg-white" id="formContainer">
-            <form class="bg-white flex flex-col gap-8 w-2/4 h-auto p-8" id="contact-form">
-                <div class="flex justify-start items-center gap-80">
+        <div class="flex justify-start rounded-2xl p-4 w-full md:4/5 lg:4/5 bg-white" id="formContainer">
+            <form class="bg-white flex flex-col gap-8 w-full md:w-3/4 lg:w-2/4 h-auto p-8" id="contact-form">
+                <div class="flex justify-between md:justify-start lg:justify-start items-center gap-20 md:gap-60 lg:gap-60">
                     <div>
                         <button><img src="images/arrow.png" alt="arrow"></button>
                     </div>

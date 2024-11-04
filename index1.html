@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-100">
     <header class="bg-gray-100 p-4 shadow-md">
-        <div class="flex justify-start gap-16 items-center px-2 py-2">
+        <div class="flex justify-start gap-4 items-center px-2 py-2 md:gap-8 lg:gap-16">
             <div class="flex items-center space-x-4">
                 <div>
                     <img class="w-6 h-6 rounded-full hover:bg-gray-300" id="menu-humburger" src="images/solid-menu.svg" alt="menu humburger">
@@ -21,16 +21,16 @@
                 </div>
             </div>
             <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <button class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-event" id="searchButton">
                     <img id="searchButton" class="w-6 h-6" src="images/codicon--search.svg" alt="">
-                </div>
-                <input type="text" id="searchInput" class="px-10 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Rechercher">
+                </button>
+                <input type="text" id="searchInput" class="px-10 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-12 md:block md:w-full lg:block lg:w-full " placeholder="Rechercher">
             </div>
         </div>
     </header>
-    <main class="flex">
+    <main class="flex flex-col md:flex-col lg:flex-row">
         <!-- Menu de navigation -->
-        <div class="bg-gray-100 shadow-md p-4 space-y-4 w-1/5 h-auto" id="menu">
+        <div class="bg-gray-100 shadow-md p-4 space-y-4 w-full h-auto md:w-full lg:w-1/5" id="menu">
             <!-- Bouton "Créer un contact" -->
             <div class="btn1">
                 <button class="bg-blue-200 hover:bg-blue-300 hover:shadow-lg text-gray-800 font-bold py-2 px-4 rounded-xl flex items-center space-x-2" id="createContact_btn">
@@ -68,7 +68,7 @@
         </div>
     
         <!-- Liste des contacts -->
-        <div class="flex-1 p-4 w-4/5 bg-white" id="list_container">
+        <div class="flex-1 p-4 w-full md:w-full lg:w-4/5 bg-white" id="list_container">
             <h1 class="text-2xl font-bold mb-4" id="tableTitle">Contacts</h1>
             <div class="bg-white shadow-md rounded-md p-4">
                 <table class="w-full" id="myContactList">
@@ -76,9 +76,9 @@
                         <tr class="border-b border-gray-200">
                             <th class="py-2 text-left">Titre</th>
                             <th class="py-2 text-left">E-mail</th>
-                            <th class="py-2 text-left">Numero de téléphone</th>
-                            <th class="py-2 text-left">Fonction et entreprise</th>
-                            <th class="py-2 text-left">Libellés</th>
+                            <th class="py-2 text-left hidden md:table-cell lg:table-cell">Numero de téléphone</th>
+                            <th class="py-2 text-left hidden md:hidden lg:table-cell">Fonction et entreprise</th>
+                            <th class="py-2 text-left hidden md:hidden lg:table-cell">Libellés</th>
                         </tr>
                     </thead>
                     <tbody id="contact-list"></tbody>
@@ -92,14 +92,14 @@
             <h2 class="text-xl font-bold mb-4">Détails du Contact</h2>
             <p id="contact-info"></p>
             <div class="flex justify-between space-x-2 mt-4">
-                <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" id="delete-button">Supprimer</button>
-                <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded" id="edit-button">Modifier</button>
-                <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded" id="close-button">Fermer</button>
+                <button class="bg-white hover:bg-gray-100 text-gray-800 font-bold py-2 px-4 rounded" id="delete-button">Supprimer</button>
+                <button class="bg-white hover:bg-gray-100 text-gray-800 font-bold py-2 px-4 rounded" id="edit-button">Modifier</button>
+                <button class="bg-white hover:bg-gray-100 text-gray-800 font-medium py-2 px-4 rounded" id="close-button">Fermer</button>
             </div>
         </div>
         <!-- Overlay et Boîte de dialogue personnalisée -->
         <div id="overlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-10 hidden"></div>
-        <div id="custom-dialog" class="bg-white shadow-lg rounded-xl p-4 z-20 hidden fixed top-1/2 left-1/2 w-1/5 h-1/4 p-5 bg-gray-100 shadow-lg rounded-[25px] transform -translate-x-1/2 -translate-y-1/2 z-50 ">
+        <div id="custom-dialog" class="bg-white shadow-lg rounded-xl p-4 z-20 hidden fixed top-1/2 left-1/2 w-4/5 h-auto md:w-2/5 md:h-auto lg:w-1/5 lg:h-auto p-5 bg-gray-100 shadow-lg rounded-[25px] transform -translate-x-1/2 -translate-y-1/2 z-50 ">
             <h2 class="text-xl font-bold mb-4">Ajouter un Libellé</h2>
             <input type="text" id="label-input" class="p-2 border border-blue-200 rounded w-full" placeholder="Saisir un libellé">
             <div class="flex justify-end space-x-2 mt-4">
@@ -123,6 +123,7 @@ let currentContactIndex;
 const showContactButton = document.getElementById('createContact_btn');
 const showListButton = document.getElementById('show-list');
 
+
 // Afficher le dialogue pour ajouter un label
 const showDialog = () => {
     overlay.classList.remove('hidden');
@@ -136,53 +137,139 @@ addLabelBtn.addEventListener('click', showDialog);
 // Tableau pour stocker les labels
 let labels = [];
 
+function countLabels() {
+    const contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+    const labelCounts = {};
+
+    // Parcourir les contacts et compter les labels
+    contacts.forEach(contact => {
+        if (contact.labels) {
+            contact.labels.forEach(label => {
+                if (labelCounts[label]) {
+                    labelCounts[label]++;
+                } else {
+                    labelCounts[label] = 1;
+                }
+            });
+        }
+    });
+
+    return labelCounts;
+}
+
+
 // Sauvegarder un nouveau label
 saveLabelBtn.addEventListener('click', () => {
     const newLabel = labelInput.value.trim();
-    
-    // Vérifier si le label existe déjà
+
     const existingLabels = Array.from(labelContainer.children).map(div => div.querySelector('span').textContent.trim());
     
     if (newLabel && !existingLabels.includes(newLabel)) {
-        const labelDiv = document.createElement('div');
-        labelDiv.classList.add('bg-gray-100', 'rounded-md', 'py-1', 'px-2', 'flex', 'items-center', 'space-x-2');
-        labelDiv.innerHTML = `
-            <img src="images/label.svg" alt="Label" class="w-5 h-5">
-            <span>${newLabel}</span>
-        `;
-        labelContainer.appendChild(labelDiv);
+        if (currentContactIndex === undefined) { // Ajouter un nouveau label
+            const labelDiv = createLabelElement(newLabel);
+            labelContainer.appendChild(labelDiv);
+        } else { // Modifier un label existant
+            const labelDiv = labelContainer.children[currentContactIndex];
+            labelDiv.querySelector('span').textContent = newLabel; // Mettre à jour le texte du label
+            currentContactIndex = undefined; // Réinitialiser après la modification
+        }
 
-        // Ajouter le label au tableau et au localStorage
-        labels.push(newLabel);
-        localStorage.setItem('labels', JSON.stringify(labels));
+        // Sauvegarder les labels dans le localStorage après modification
+        saveLabelsToLocalStorage(); 
+        loadLabels(); // Mettre à jour les labels pour afficher les compteurs
 
         overlay.classList.add('hidden');
         customDialog.classList.add('hidden');
     } else if (existingLabels.includes(newLabel)) {
-        alert('Le label existe déjà.'); // Alerte si le label est déjà présent
+        alert('Le label existe déjà.');
         overlay.classList.add('hidden');
         customDialog.classList.add('hidden');
     }
 });
 
-// Charger les labels depuis localStorage
+
+// Créer un élément de label avec des boutons
+let editButtonsVisible = false;
+
+function createLabelElement(labelText, count) {
+    const labelDiv = document.createElement('div');
+    labelDiv.classList.add('bg-gray-100', 'rounded-md', 'py-1', 'px-2', 'flex', 'items-center', 'justify-between'); // Utiliser justify-between
+
+    labelDiv.innerHTML = `
+        <div class="flex items-center space-x-2">
+            <img src="images/label.svg" alt="Label" class="w-5 h-5">
+            <span>${labelText}</span>
+            <span class="ml-2 text-gray-600">(${count})</span> <!-- Afficher le compteur -->
+        </div>
+        <div class="flex space-x-2"> <!-- Ajouter un conteneur flex pour les boutons -->
+            <button class="border bg-gray-100 text-gray-800 hover:bg-gray-300 edit-button hidden">
+                <img src="images/modification-du-stylo.png" class="w-5 h-5">
+            </button>
+            <button class="border bg-gray-100 text-gray-800 hover:bg-gray-300 delete-button hidden">
+                <img src="images/effacer.png" class="w-5 h-5">
+            </button>
+        </div>
+    `;
+
+    // Ajouter un écouteur d'événements pour le libellé
+    labelDiv.addEventListener('click', () => {
+        editButtonsVisible = !editButtonsVisible; // Inverser l'état de visibilité
+        const editButton = labelDiv.querySelector('.edit-button');
+        const deleteButton = labelDiv.querySelector('.delete-button');
+
+        if (editButtonsVisible) {
+            editButton.classList.remove('hidden'); // Afficher les boutons d'édition
+            deleteButton.classList.remove('hidden');
+        } else {
+            editButton.classList.add('hidden'); // Masquer les boutons d'édition
+            deleteButton.classList.add('hidden');
+        }
+    });
+
+    // Ajouter un écouteur d'événements pour le bouton modifier
+    labelDiv.querySelector('.edit-button').addEventListener('click', (event) => {
+        event.stopPropagation(); // Empêche le clic sur le libellé d'être déclenché
+        labelInput.value = labelText; // Définir l'entrée au texte actuel du libellé
+        currentContactIndex = Array.from(labelContainer.children).indexOf(labelDiv); // Stocker l'index pour la modification
+        showDialog(); // Ouvrir la boîte de dialogue
+    });
+
+    // Ajouter un écouteur d'événements pour le bouton supprimer
+    labelDiv.querySelector('.delete-button').addEventListener('click', (event) => {
+        event.stopPropagation(); // Empêche le clic sur le libellé d'être déclenché
+        labelContainer.removeChild(labelDiv); // Supprimer le libellé
+        saveLabelsToLocalStorage(); // Mettre à jour localStorage
+        
+    });
+
+    return labelDiv;
+}
+// Fonction pour sauvegarder les labels dans localStorage
+function saveLabelsToLocalStorage() {
+    const labelElements = Array.from(labelContainer.children);
+    const labelsToStore = labelElements.map(labelDiv => labelDiv.querySelector('span').textContent.trim());
+    localStorage.setItem('labels', JSON.stringify(labelsToStore));
+}
+
+// Charger les labels lors du chargement de la page
 function loadLabels() {
     const storedLabels = JSON.parse(localStorage.getItem('labels')) || [];
-    labels = storedLabels; // Mettre à jour la variable labels
+    const labelCounts = countLabels(); // Compter les labels
+
+    // Vider le conteneur de labels
+    labelContainer.innerHTML = '';
 
     storedLabels.forEach(label => {
-        const labelDiv = document.createElement('div');
-        labelDiv.classList.add('bg-gray-100', 'rounded-md', 'py-1', 'px-2', 'flex', 'items-center', 'space-x-2');
-        labelDiv.innerHTML = `
-            <img src="images/label.svg" alt="Label" class="w-5 h-5">
-            <span>${label}</span>
-        `;
+        const count = labelCounts[label] || 0; // Obtenir le compteur
+        const labelDiv = createLabelElement(label, count);
         labelContainer.appendChild(labelDiv);
     });
 }
 
-// Appeler la fonction au chargement du document
+
+// Appeler loadLabels au chargement du document
 document.addEventListener("DOMContentLoaded", loadLabels);
+
 
 // Annuler l'ajout de label
 cancelLabelBtn.addEventListener('click', () => {
@@ -206,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     contacts.forEach((contact, index) => {
         const contactRow = document.createElement('tr'); // Créer une nouvelle ligne pour le contact
-        contactRow.classList.add('border-b', 'border-gray-200');
+        contactRow.classList.add('border-b', 'border-gray-200', "hover:bg-blue-200");
 
         contactRow.innerHTML = `
             <td class="py-2 flex items-center">
@@ -214,9 +301,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${contact.prenom} ${contact.nom}
             </td>
             <td class="py-2">${contact.emails.join(', ')}</td>
-            <td class="py-2">${contact.phone}</td>
-            <td class="py-2">${contact.fonction}, ${contact.entreprise}</td>
-            <td class="py-2">${contact.labels.join(', ')}</td>
+            <td class="py-2 hidden md:table-cell lg:table-cell">${contact.phone}</td>
+            <td class="py-2 hidden md:hidden lg:table-cell">${contact.fonction}, ${contact.entreprise}</td>
+            <td class="py-2 hidden md:hidden lg:table-cell"><span class="border border-1 border-gray-800 border-solid rounded-lg p-2 items-center">${contact.labels.join(', ')}</span></td>
         `;
 
         contactList.appendChild(contactRow); // Ajouter la ligne au tableau
@@ -295,6 +382,35 @@ tableTitle.textContent = `Contacts(${contacts.length})`;
 // Afficher le nombre total des contacts
 const contactCount = document.getElementById("contact_count");
 contactCount.textContent = `${contacts.length}`;
+
+document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+
+    searchButton.addEventListener('click', function() {
+        const searchTerm = searchInput.value.trim().toLowerCase(); // Obtenir le terme de recherche
+        const contacts = JSON.parse(localStorage.getItem('contacts')) || []; // Récupérer les contacts ou un tableau vide
+
+        // Rechercher dans tous les contacts
+        const foundContact = contacts.find(contact => {
+            const fullName = `${contact.prenom} ${contact.nom}`.toLowerCase(); // Combiner prénom et nom
+            return fullName.includes(searchTerm); // Vérifier si le terme est inclus dans le nom complet
+        });
+
+        if (foundContact) {
+            const index = contacts.indexOf(foundContact); // Obtenez l'index du contact trouvé
+            showContactDetails(index); // Affichez les détails du contact
+        } else {
+            alert('Aucun contact trouvé.'); // Alerte si aucun contact n'est trouvé
+        }
+        
+    });
+});
+
+
+
+
+
 
 
     </script>
