@@ -21,7 +21,7 @@ const showDialog = () => {
 addLabelButton.addEventListener('click', showDialog);
 addLabelBtn.addEventListener('click', showDialog);
 
-// Tableau pour stocker les labels
+// Tableau pour stocker les labels uniques
 let labels = [];
 
 // Sauvegarder un nouveau label
@@ -30,28 +30,27 @@ saveLabelBtn.addEventListener('click', () => {
     
     // Vérifier si le label existe déjà
     const existingLabels = Array.from(labelContainer.children).map(div => div.querySelector('span').textContent.trim());
-    
-    if (newLabel && !existingLabels.includes(newLabel)) {
-        const labelDiv = document.createElement('div');
-        labelDiv.classList.add('bg-gray-100', 'rounded-md', 'py-1', 'px-2', 'flex', 'items-center', 'space-x-2');
-        labelDiv.innerHTML = `
-            <img src="images/label.svg" alt="Label" class="w-5 h-5">
-            <span>${newLabel}</span>
-        `;
-        labelContainer.appendChild(labelDiv);
 
-         // Ajouter le label au tableau
-         labels.push(newLabel);
+    if (newLabel) {
+        if (!existingLabels.includes(newLabel) && !labels.includes(newLabel)) {
+            const labelDiv = document.createElement('div');
+            labelDiv.classList.add('bg-gray-100', 'rounded-md', 'py-1', 'px-2', 'flex', 'items-center', 'space-x-2');
+            labelDiv.innerHTML = `
+                <img src="images/label.svg" alt="Label" class="w-5 h-5">
+                <span>${newLabel}</span>
+            `;
+            labelContainer.appendChild(labelDiv);
 
-
-        overlay.classList.add('hidden');
-        customDialog.classList.add('hidden');
-    } else if (existingLabels.includes(newLabel)) {
-        alert('Le label existe déjà.'); // Alerte si le label est déjà présent
+            // Ajouter le nouveau label au tableau
+            labels.push(newLabel);
+        } else {
+            alert('Le label existe déjà.'); // Alerte si le label est déjà présent
+        }
         overlay.classList.add('hidden');
         customDialog.classList.add('hidden');
     }
 });
+
 // Charger les labels depuis localStorage
 function loadLabels() {
     const storedLabels = JSON.parse(localStorage.getItem('labels')) || [];
@@ -94,7 +93,7 @@ function addEmailField() {
     const newEmailInput = document.createElement('div');
     newEmailInput.classList.add('flex', 'justify-start', 'gap-4', 'mt-2');
     newEmailInput.innerHTML = `
-        <img src="images/ic--outline-email.svg" alt="Email Icon">
+        <img src="images/ic--outline-email.svg" alt="Icône Email">
         <input class="p-2 border border-gray-300 rounded w-4/5" type="email" placeholder="Email">
     `;
     const emailContainer = document.getElementById('email-container');
@@ -114,9 +113,6 @@ function handleImageUpload(event) {
     }
 }
 
-
-
-
 // Ajouter un contact
 function addContact(event) {
     event.preventDefault(); // Empêche le rechargement de la page
@@ -133,6 +129,12 @@ function addContact(event) {
     const phone = document.getElementById('phone').value;
     const imageSrc = document.getElementById('photo-preview').src; // Récupérer la source de l'image
 
+    // Utiliser le tableau labels mais permettre l'entrée de labels non-duplicables
+    const contactLabels = labels.filter(label => {
+        const labelInputValue = labelInput.value.trim();
+        return labelInputValue === label; // Associer seulement le label saisi
+    });
+
     const contact = {
         prenom,
         nom,
@@ -141,7 +143,7 @@ function addContact(event) {
         emails,
         phone,
         image: imageSrc,
-        labels // Ajouter les labels à l'objet contact
+        labels: contactLabels // Associer le label au contact
     };
 
     // Récupérer les contacts existants ou initialiser un tableau vide
@@ -150,18 +152,14 @@ function addContact(event) {
 
     localStorage.setItem('contacts', JSON.stringify(existingContacts)); // Sauvegarder les contacts
 
-
-
-
     // Réinitialiser le formulaire
     document.getElementById('contact-form').reset();
     document.getElementById('photo-preview').src = 'images/images.png'; // Réinitialiser l'image
-    console.log(contacts); // Afficher les contacts
+    console.log(existingContacts); // Afficher les contacts
 
-     // Rediriger vers la page des contacts
-     window.location.href = 'index1.html';
+    // Rediriger vers la page des contacts
+    window.location.href = 'index1.html';
 }
-
 
 // Ajouter les écouteurs d'événements
 document.getElementById('add-email').addEventListener('click', addEmailField);
@@ -183,12 +181,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Cacher le menu et agrandir le conteneur de formulaire
                 menu.classList.add('hidden'); // Cache le menu
                 formContainer.classList.remove('w-3/4'); // Réinitialise la largeur
-                formContainer.classList.add('w-12/12'); // Agrandit le conteneur de formulaire à 95%
+                formContainer.classList.add('w-12/12'); // Agrandit le conteneur de formulaire à pleine largeur
             } else {
                 menu.classList.remove('hidden'); // Affiche le menu
                 menu.classList.add('flex'); // Applique le style flex
                 menu.classList.add("flex-col");
-                formContainer.classList.remove('w-11/12'); // Réinitialise la largeur
+                formContainer.classList.remove('w-12/12'); // Réinitialise la largeur
                 formContainer.classList.add('w-3/4'); // Rétrécit le conteneur de formulaire à 75%
             }
             isVisible = !isVisible; // Inverse l'état
